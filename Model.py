@@ -1,7 +1,10 @@
+from edge import Edge
+from node import Node
 
 
 class Model:
     self.nodes = []
+    self.edge = []
 
     def __init__(self, iteration_):
         self.iteration = iteration_
