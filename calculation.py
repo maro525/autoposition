@@ -1,5 +1,5 @@
 from node import Node
-import math
+from math import pi, atan2, fabs, pow, sqrt
 
 DC1 = 30.0
 DC2 = 100.0
@@ -10,13 +10,13 @@ DC6 = 10.0
 DC7 = 1
 DC8 = 1
 DC9 = 0
-DC10 = math.pi/4.0
-DC11 = math.pi/2.0
+DC10 = pi/4.0
+DC11 = pi/2.0
 DC12 = 20000.0
+DC13 = 0.1
 
 
-# TODO : 閾値設定
-def attractiveforce(n1, n2, axis):
+def attractiveforce(n1, n2):  # TODO : 閾値設定
     dx = n1.pos[0] - n2.posa[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
@@ -24,40 +24,57 @@ def attractiveforce(n1, n2, axis):
     f = -DC1 * dc
     afx = f * dx / d
     afy = f * dy / d
-    return (afx, afy)
-
-# TODO: 閾値設定
+    return afx, afy
 
 
-def repulsiveforce(n1, n2, axis):
+def repulsiveforce(n1, n2):  # TODO: 閾値設定
     dx = n1.pos[0] - n2.posa[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
     f = DC12 / (d * d)
     rfx = f * (dx / d)
     rfy = f * (dy / d)
-    return (rfx, rfy)
+    return rfx, rfy
 
 
-def magneticforce(n1, n2, type_, axis):
+def magneticforce(n1, n2, edgetype):  # TODO: 閾値設定
+    mfx = magneticforceonaxis(n1, n2, edgetype, 0)
+    mfy = magneticforceonaxis(n1, n2, edgetype, 1)
+    return mfx, mfy
+
+
+def inertialforce(n1, mv):
+    dk = sqrt(pow(mv[0], 2) + pow(mv[1], 2))
+    s = sqrt(pow(n1.getWidth()/2, 2) + pow(n1.getHeight()/2, 2))
+    if dk > s:
+        f = -DC13 * pow(dk-s, 2)
+        ifx = f * (mv[0] / dk)
+        ify = f * (mv[1] / dk)
+    else:
+        ifx = 0
+        ify = 0
+    return ifx, ify
+
+
+def magneticforceonaxis(n1, n2, type_, axis):
     d = getDistance(n1, n2)
     dx = n1.pos[0] - n2.pos[1]
     dy = n1.pos[1] - n2.pos[1]
-    dk = math.atan2(dy, dx)
-    k = getK(type_)
+    dk = atan2(dy, dx)
+    k = getK(type_, dk)
     t = getT(k, dk)
     if d == 0 or t == 0:
         return
     f = getF(d, t, type_)
     mft = getmftype(k, dx, dy, dk, axis)
     if mft == 0:
-        return f * (math.fabs(dx) / d)
+        return f * (fabs(dx) / d)
     elif mft == 1:
-        return -f * (math.fabs(dx) / d)
+        return -f * (fabs(dx) / d)
     elif mft == 2:
-        return f * (math.fabs(dy) / d)
+        return f * (fabs(dy) / d)
     elif mft == 3:
-        return -f * (math.fabs(dy) / d)
+        return -f * (fabs(dy) / d)
 
 
 def getmftype(k, dx, dy, dk, axis):
@@ -107,28 +124,28 @@ def getQ(dx, dy):
 
 
 def getB1(k, dk):
-    if k < -math.pi/2.0 and ((math.pi/2.0 >= dk and dk > math.pi+k) or (k < dk and dk < -math.pi/2.0)):
+    if k < -pi/2.0 and ((pi/2.0 >= dk and dk > pi+k) or (k < dk and dk < -pi/2.0)):
         return True
     else:
         return False
 
 
 def getB2(k, dk):
-    if k > -math.pi/2.0 and ((-math.pi/2.0 < dk and dk < k) or (math.pi/2.0 < dk and dk < math.pi+k)):
+    if k > -pi/2.0 and ((-pi/2.0 < dk and dk < k) or (pi/2.0 < dk and dk < pi+k)):
         return True
     else:
         return False
 
 
 def getB3(k, dk):
-    if k < math.pi/2.0 and ((math.pi/2.0 > dk and dk > k) or (k-math.pi < dk and dk < -math.pi/2.0)):
+    if k < pi/2.0 and ((pi/2.0 > dk and dk > k) or (k-pi < dk and dk < -pi/2.0)):
         return True
     else:
         return False
 
 
 def getB4(k, dk):
-    if k > math.pi/2.0 and ((-math.pi/2.0 < dk and dk < k-math.pi) or (math.pi/2.0 < dk and dk < k)):
+    if k > pi/2.0 and ((-pi/2.0 < dk and dk < k-pi) or (pi/2.0 < dk and dk < k)):
         return True
     else:
         return False
@@ -136,47 +153,47 @@ def getB4(k, dk):
 
 def getF(d, t, type_):
     if type_ == 0:
-        f = DC3 * DC6 * math.pow(d, DC7) * math.pow(t, DC8)
+        f = DC3 * DC6 * pow(d, DC7) * pow(t, DC8)
     elif type_ == 1:
-        f = DC4 * DC6 * math.pow(d, DC7) * math.pow(t, DC8)
+        f = DC4 * DC6 * pow(d, DC7) * pow(t, DC8)
     elif type_ == 2:
-        f = DC4 * DC6 * math.pow(d, DC7) * math.pow(t, DC8)
+        f = DC4 * DC6 * pow(d, DC7) * pow(t, DC8)
     elif type_ == 3:
-        f = DC5 * DC6 * math.pow(d, DC7) * math.pow(t, DC8)
+        f = DC5 * DC6 * pow(d, DC7) * pow(t, DC8)
     elif type_ == 4:
-        f = DC5 * DC6 * math.pow(d, DC7) * math.pow(t, DC8)
+        f = DC5 * DC6 * pow(d, DC7) * pow(t, DC8)
     return f
 
 
 def getT(k, dk):
-    if math.fabs(k-dk) > math.pi:
-        t = math.fabs(k-dk-2.0*math.pi)
+    if fabs(k-dk) > pi:
+        t = fabs(k-dk-2.0*pi)
     else:
-        t = math.fabs(k-dk)
+        t = fabs(k-dk)
     return t
 
 
-def getK(type_):
+def getK(type_, dk):
     if type_ == 1 or type_ == 2:
         k = DC10
         if type_ == 1 and DC10 > 0:
-            k = DC10 - math.pi
+            k = DC10 - pi
         elif type_ == 1 and DC10 <= 0:
-            k = DC10 + math.pi
+            k = DC10 + pi
     if type_ == 3 or type_ == 4:
         k = DC11
         if type_ == 3 and DC11 > 0:
-            k = DC11 - math.pi
+            k = DC11 - pi
         elif type_ == 3 and DC11 <= 0:
-            k = DC11 + math.pi
+            k = DC11 + pi
 
     if type_ == 0:
         k = DC9
-        if math.fabs(k-dk) <= 3.0 / 2.0 * math.pi or math.pi / 2.0 < math.fabs(k-dk):
+        if fabs(k-dk) <= 3.0 / 2.0 * pi or pi / 2.0 < fabs(k-dk):
             if DC9 > 0:
-                k = k - math.pi
+                k = k - pi
             else:
-                k = k + math.pi
+                k = k + pi
 
     return k
 
@@ -195,7 +212,7 @@ def getDistance(n1, n2):
     return sqrt(dx2+dy2)
 
 
-def isIntersect(n1, n2):
+def isIntersect(n1, n2):  # TODO
     return False
 
 
