@@ -57,7 +57,7 @@ class Model:
         return mv
 
     def isNext(self, n1, n2):
-       if n1.getlinktype() == 0:
+        if n1.getlinktype() == 0:
             return False
         else:
             return True
