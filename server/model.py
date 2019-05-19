@@ -1,6 +1,7 @@
 from node import Node
 from calculation import (attractiveforce, repulsiveforce,
                          magneticforce, inertialforce)
+import copy
 
 MINV = 0.05
 NODE_NUM = 50
@@ -14,7 +15,7 @@ class Model:
         self.move = []
 
     def setNode(self, n_):
-        self.nodes = n_
+        self.nodes = copy.copy(n_)
 
     def setlayout(self):
         for _ in range(self.iteration):

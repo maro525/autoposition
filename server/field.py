@@ -9,6 +9,10 @@ class Field:
         self.lx = 800
         self.ly = 800
 
+    def setField(self, num):
+        self.lx = num
+        self.ly = num
+
     def setField(self, x, y):
         self.lx = x
         self.ly = y
@@ -23,3 +27,29 @@ class Field:
             x = cx + r * cos(rad)
             y = cy + r * sin(rad)
             self.nodes.append(Node(x, y, self.lx, self.ly))
+    '''
+    {
+        "nodes" : [
+            {
+                "x" : **, "y" : **, "w" : ** , "h" : **
+            }
+            {
+                "x" : **, "y" : **, "w" : ** , "h" : **
+            }
+            ....
+        ]
+    }
+    '''
+
+    def getNodes(self):
+        dic = {}
+        nodes = []
+        for n in self.nodes:
+            nodeinfo = {}
+            nodeinfo["x"] = n.pos[0]
+            nodeinfo["y"] = n.pos[1]
+            nodeinfo["w"] = n.r
+            nodeinfo["h"] = n.r
+            nodes.append(nodeinfo)
+        dic["nodes"] = nodes
+        return dic
