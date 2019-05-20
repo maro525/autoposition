@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ofMain.h"
+#include "communi.h"
+#include "view.h"
 
 class ofApp : public ofBaseApp
 {
@@ -8,6 +9,7 @@ public:
 	void setup();
 	void update();
 	void draw();
+	void sendCommand(int & command);
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -20,4 +22,8 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+
+	Communication com;
+	Model model;
+	View view;
 };

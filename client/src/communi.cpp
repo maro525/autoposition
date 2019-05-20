@@ -1,39 +1,36 @@
 #include "communi.h"
 
-void Communication::setupsend(string host, int port)
+void Communication::setupsend(string host, int port, string address)
 {
     sender.setup(host, port);
+    sendaddress = address;
 }
 
 void Communication::setuprecv(int port, string address)
 {
     receiver.setup(port);
-    recvadress = address;
+    recvaddress = address;
 }
 
-void Communication::parse(string text)
-{
-    bool parseSuccessful = json.parse(text);
-}
-
-void Communication::send(string address, int command)
+void Communication::send(int command, int num)
 {
     ofxOscMessage m;
-    m.setAddress(address);
+    m.setAddress(sendaddress);
     m.addIntArg(command);
+    m.addIntArg(num);
     sender.sendMessage(m);
 }
 
 void Communication::recv()
 {
-    while (reciver.hasWaitingMessages())
+    while (receiver.hasWaitingMessages())
     {
         ofxOscMessage m;
-        reciever.getNextMessage(&m);
+        receiver.getNextMessage(&m);
 
         if (m.getAddress() == recvaddress)
         {
-            t = m.getArgAsString(0);
+            message = m.getArgAsString(0);
         }
     }
 }

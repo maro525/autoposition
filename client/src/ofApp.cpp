@@ -1,20 +1,46 @@
 #include "ofApp.h"
 
+#define HOST "127.0.0.1"
+#define SEND_PORT 5665
+#define RECV_PORT 5775
+#define SEND_ADDRESS "/command"
+#define RECV_ADDRESS "/positions"
+
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+    ofBackground(255);
+
+    com.setupsend(HOST, SEND_PORT, SEND_ADDRESS);
+    com.setuprecv(RECV_PORT, RECV_ADDRESS);
+
+    view.setupGui();
+    view.setModel(&model);
+    ofAddListener(view.commandEvent, this, &ofApp::sendCommand);
 }
 
 //--------------------------------------------------------------
 void ofApp::update()
 {
+    com.recv();
+    model.setNodeFromJsonText(com.getMessage());
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
+    view.draw();
 }
 
+void ofApp::sendCommand(int &command)
+{
+    int fieldsize = 800;
+    int nodesize = 100;
+    if (command == 0)
+        com.send(command, fieldsize);
+    else
+        com.send(command, nodesize);
+}
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {

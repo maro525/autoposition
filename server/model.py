@@ -16,27 +16,38 @@ class Model:
 
     def setNode(self, n_):
         self.nodes = copy.copy(n_)
+        self.move = [[0, 0]] * len(self.nodes)
+        print("NODE SET size ->", len(self.nodes))
 
     def setlayout(self):
         for _ in range(self.iteration):
             self.calculate()
 
     def setlayoutForOnestep(self):
+        if len(self.nodes) == 0:
+            print("[ERROR]nodes size is 0")
+            return
         self.calculate()
 
     def calculate(self):
         for i1, n1 in enumerate(self.nodes):
+            print(i1, self.move[i1])
             for n2 in self.nodes:
-                self.move[i1] = self.getMoveVector(n1, n2)
+                mv = self.getMoveVector(n1, n2)
+                print("mv", mv)
+                self.move[i1][0] += mv[0]
+                self.move[i1][1] += mv[1]
 
         for i in range(len(self.nodes)):
             self.shift(i, self.move[i])
 
     def shift(self, i, mv):
-        self.nodes[i].move(mv)
+        print(i, mv)
+        self.nodes[i].move(mv[0], mv[1])
 
     def getMoveVector(self, n1, n2):
         if n1 == n2:
+            print("n1 == n2")
             return
 
         mv = [0, 0]

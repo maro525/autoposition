@@ -28,7 +28,7 @@ def attractiveforce(n1, n2):  # TODO : 閾値設定
 
 
 def repulsiveforce(n1, n2):  # TODO: 閾値設定
-    dx = n1.pos[0] - n2.posa[0]
+    dx = n1.pos[0] - n2.pos[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
     f = DC12 / (d * d)

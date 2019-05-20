@@ -9,11 +9,11 @@ class Field:
         self.lx = 800
         self.ly = 800
 
-    def setField(self, num):
-        self.lx = num
-        self.ly = num
+    def setField(self, fieldsize):
+        self.lx = fieldsize
+        self.ly = fieldsize
 
-    def setField(self, x, y):
+    def setFieldFromXY(self, x, y):
         self.lx = x
         self.ly = y
 
