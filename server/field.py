@@ -1,11 +1,11 @@
 from node import Node
 from math import sin, cos, pi
+import random
 
 
 class Field:
     def __init__(self):
         self.nodes = []
-        self.edges = []
         self.lx = 800
         self.ly = 800
 
@@ -13,20 +13,43 @@ class Field:
         self.lx = fieldsize
         self.ly = fieldsize
 
-    def setFieldFromXY(self, x, y):
+    def setFieldXY(self, x, y):
         self.lx = x
         self.ly = y
 
-    def initNodes(self, num_):
+    def initialize(self, nodenum_):
+        self.nodes.clear()
+        self.initNodes(nodenum_)
+        self.setLink()
+
+
+    def initNodes(self, nodenum_):
         minl = min(self.lx, self.ly)
         r = minl * (1/2 - 1/8)
         cx = self.lx / 2
         cy = self.ly / 2
-        for i in range(num_):
-            rad = pi*2*i/num_
+        print("cx", cx, "cy", cy)
+        for i in range(nodenum_):
+            rad = pi*2*i/nodenum_
             x = cx + r * cos(rad)
             y = cy + r * sin(rad)
             self.nodes.append(Node(x, y, self.lx, self.ly))
+
+    def setLink(self):
+        linknode = random.choices(range(len(self.nodes)), k=35)
+        size = len(linknode)
+        for i in range(size):
+            type = 0
+            if i is size-1:
+                other_index = linknode[0]
+            else:
+                other_index = linknode[i+1]
+            if i == other_index:
+                continue
+            self.nodes[i].addLink(type, self.nodes[other_index])
+            self.nodes[other_index].addLink(type, self.nodes[i])
+
+
     '''
     {
         "nodes" : [
@@ -50,6 +73,16 @@ class Field:
             nodeinfo["y"] = n.pos[1]
             nodeinfo["w"] = n.r
             nodeinfo["h"] = n.r
+            links = n.getlinkednodes()
+            indexes = self.getNodeIndexes(links)
+            nodeinfo["link"] = indexes
             nodes.append(nodeinfo)
         dic["nodes"] = nodes
         return dic
+
+    def getNodeIndexes(self, nodes):
+        indexes = []
+        for n in nodes:
+            index = self.nodes.index(n)
+            indexes.append(index)
+        return indexes

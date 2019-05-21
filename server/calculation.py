@@ -1,7 +1,7 @@
 from node import Node
 from math import pi, atan2, fabs, pow, sqrt
 
-DC1 = 30.0
+DC1 = 10.0
 DC2 = 100.0
 DC3 = 0.01
 DC4 = 0.01
@@ -12,26 +12,32 @@ DC8 = 1
 DC9 = 0
 DC10 = pi/4.0
 DC11 = pi/2.0
-DC12 = 20000.0
+DC12 = 1.0
 DC13 = 0.1
 
 
-def attractiveforce(n1, n2):  # TODO : 閾値設定
-    dx = n1.pos[0] - n2.posa[0]
+def attractiveforce(n1, n2):
+    dx = n1.pos[0] - n2.pos[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
+    if d == 0:
+        return 0, 0
     dc = d / DC2
     f = -DC1 * dc
+    f = thresh(f)
     afx = f * dx / d
     afy = f * dy / d
     return afx, afy
 
 
-def repulsiveforce(n1, n2):  # TODO: 閾値設定
+def repulsiveforce(n1, n2):
     dx = n1.pos[0] - n2.pos[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
+    if d == 0:
+        return 0, 0
     f = DC12 / (d * d)
+    f = thresh(f)
     rfx = f * (dx / d)
     rfy = f * (dy / d)
     return rfx, rfy
@@ -48,6 +54,7 @@ def inertialforce(n1, mv):
     s = sqrt(pow(n1.getWidth()/2, 2) + pow(n1.getHeight()/2, 2))
     if dk > s:
         f = -DC13 * pow(dk-s, 2)
+        f = thresh(f)
         ifx = f * (mv[0] / dk)
         ify = f * (mv[1] / dk)
     else:
@@ -64,7 +71,7 @@ def magneticforceonaxis(n1, n2, type_, axis):
     k = getK(type_, dk)
     t = getT(k, dk)
     if d == 0 or t == 0:
-        return
+        return 0
     f = getF(d, t, type_)
     mft = getmftype(k, dx, dy, dk, axis)
     if mft == 0:
@@ -75,6 +82,8 @@ def magneticforceonaxis(n1, n2, type_, axis):
         return f * (fabs(dy) / d)
     elif mft == 3:
         return -f * (fabs(dy) / d)
+    else:
+        return 0
 
 
 def getmftype(k, dx, dy, dk, axis):
@@ -228,3 +237,12 @@ def isVertical(n1, n2):
         return True
     else:
         return False
+
+def thresh(v):
+    value = v
+    if value > 500:
+        value = 500
+    elif value < -500:
+        value = -500
+
+    return value
