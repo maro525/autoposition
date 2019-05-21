@@ -10,5 +10,9 @@
 			"path": "/Users/hidemaro/Dropbox/Library/of101/addons"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"iosfwd": "cpp"
+		}
+	}
 }

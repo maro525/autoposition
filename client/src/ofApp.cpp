@@ -30,16 +30,23 @@ void ofApp::update()
 void ofApp::draw()
 {
     view.draw();
+    drawData();
 }
 
 void ofApp::sendCommand(int &command)
 {
     int fieldsize = 800;
-    int nodesize = 100;
-    if (command == 0)
-        com.send(command, fieldsize);
-    else
-        com.send(command, nodesize);
+    int nodesize = 50;
+    com.send(command, nodesize);
+}
+
+void ofApp::drawData()
+{
+    ofPushStyle();
+    ofSetColor(18);
+    ofDrawRectangle(800, 0, 400, 800);
+    ofPopStyle();
+    view.drawData();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)

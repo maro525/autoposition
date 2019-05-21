@@ -11,6 +11,7 @@ struct NodeElem
     float y;
     float width;
     float height;
+    vector<int> links;
 };
 
 class Model

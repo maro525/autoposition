@@ -7,7 +7,8 @@ class View
 {
 public:
     View(){};
-    ~View(){
+    ~View()
+    {
         delete gui;
     };
 
@@ -17,10 +18,13 @@ public:
 
     void draw();
     void drawNode(NodeElem *n);
+    void drawLink(NodeElem *n);
+    void drawData();
 
     void commandFired();
 
     ofEvent<int> commandEvent;
+
 private:
     Model *m;
     ofxUISuperCanvas *gui;
@@ -29,10 +33,10 @@ private:
     {
         std::cout << "----- GUI EVENT : " << eventName << " -----" << endl;
     }
-    
+
     void setUIToggleToFalse(string name)
     {
-        ofxUIToggle * widget = (ofxUIToggle *) gui->getWidget(name);
+        ofxUIToggle *widget = (ofxUIToggle *)gui->getWidget(name);
         widget->setValue(false);
     }
 };

@@ -20,6 +20,7 @@ public:
 
     void recv();
     void send(int command, int num);
+    void sendString(string a, string text);
 
     ofxOscSender sender;
     ofxOscReceiver receiver;

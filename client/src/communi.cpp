@@ -21,6 +21,14 @@ void Communication::send(int command, int num)
     sender.sendMessage(m);
 }
 
+void Communication::sendString(string a, string text)
+{
+    ofxOscMessage m;
+    m.setAddress(a);
+    m.addStringArg(text);
+    sender.sendMessage(m);
+}
+
 void Communication::recv()
 {
     while (receiver.hasWaitingMessages())
@@ -31,6 +39,10 @@ void Communication::recv()
         if (m.getAddress() == recvaddress)
         {
             message = m.getArgAsString(0);
+            std::cout << "[RECV MESSAGE] " << message << endl;
+        }
+        else{
+            message = "";
         }
     }
 }
