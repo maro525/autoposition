@@ -20,6 +20,8 @@ public:
     Model(){};
     ~Model(){};
 
+    void clear(){ nodes.clear(); };
+
     void setNodeFromJsonText(string text);
     void setNode();
     void setNodeAtIndex(int index, NodeElem n);

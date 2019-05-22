@@ -9,7 +9,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-    ofBackground(255);
+    ofBackground(218, 222, 229);
 
     com.setupsend(HOST, SEND_PORT, SEND_ADDRESS);
     com.setuprecv(RECV_PORT, RECV_ADDRESS);
@@ -35,18 +35,24 @@ void ofApp::draw()
 
 void ofApp::sendCommand(int &command)
 {
-    int fieldsize = 800;
-    int nodesize = 50;
+    int nodesize = view.getNodeNum();
+    if (command == 0)
+        model.clear();
     com.send(command, nodesize);
 }
 
 void ofApp::drawData()
 {
     ofPushStyle();
-    ofSetColor(18);
-    ofDrawRectangle(800, 0, 400, 800);
+    ofSetColor(5, 21, 45);
+    ofDrawRectangle(800, 0, 400, 1200);
     ofPopStyle();
     view.drawData();
+
+    ofPushStyle();
+    ofSetColor(10);
+    ofDrawRectangle(0, 800, 800, 400);
+    ofPopStyle();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)

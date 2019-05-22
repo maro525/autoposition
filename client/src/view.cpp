@@ -3,13 +3,14 @@
 void View::setupGui()
 {
     gui = new ofxUISuperCanvas("GUI");
-    gui->setPosition(0, 0);
+    gui->setPosition(0, 800);
     gui->addSpacer();
     gui->addLabel("COMMAND");
+    gui->addSlider("NUM", 1.0, 100.0, &nodenum);
     gui->addLabelToggle("INITIALIZE", false);
     gui->addLabelToggle("CALCULATE 1 STEP", false);
+
     gui->addLabelToggle("AUTO CALCULATION", false);
-    gui->addLabelToggle("RESET", false);
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &View::guiEvent);
 }
@@ -25,7 +26,7 @@ void View::draw()
 
 void View::drawNode(NodeElem *n)
 {
-    ofSetColor(0);
+    ofSetColor(12, 35, 71);
     ofFill();
     ofDrawEllipse(n->x, n->y, n->width, n->height);
 }
@@ -48,7 +49,9 @@ void View::drawLink(NodeElem *n)
 void View::guiEvent(ofxUIEventArgs &e)
 {
     string name = e.widget->getName();
-    printGuiEvent(name);
+    int kind = e.widget->getKind();
+    if (kind == 13)
+        printGuiEvent(name);
     int command;
     if (name == "INITIALIZE")
     {
@@ -65,12 +68,9 @@ void View::guiEvent(ofxUIEventArgs &e)
         command = 2;
         ofNotifyEvent(commandEvent, command);
     }
-    else if (name == "RESET")
-    {
-        command = 3;
-        ofNotifyEvent(commandEvent, command);
-    }
-    setUIToggleToFalse(name);
+
+    if (kind == 13)
+        setUIToggleToFalse(name);
 }
 
 void View::drawData()
@@ -82,7 +82,7 @@ void View::drawData()
         float px = m->nodes.at(i).x;
         float py = m->nodes.at(i).y;
         vector<int> links = m->nodes.at(i).links;
-        string text = ofToString(i) + " link :" + ofToString(links) " x : " + ofToString(px) + " y :" + ofToString(py);
+        string text = ofToString(i) + " link :" + ofToString(links) + " x : " + ofToString(px) + " y :" + ofToString(py);
         float tx = 810;
         float ty = 15 + i * 12;
         ofDrawBitmapString(text, tx, ty);

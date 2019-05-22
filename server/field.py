@@ -6,8 +6,6 @@ import random
 class Field:
     def __init__(self):
         self.nodes = []
-        self.lx = 800
-        self.ly = 800
 
     def setField(self, fieldsize):
         self.lx = fieldsize
@@ -22,7 +20,6 @@ class Field:
         self.initNodes(nodenum_)
         self.setLink()
 
-
     def initNodes(self, nodenum_):
         minl = min(self.lx, self.ly)
         r = minl * (1/2 - 1/8)
@@ -33,10 +30,12 @@ class Field:
             rad = pi*2*i/nodenum_
             x = cx + r * cos(rad)
             y = cy + r * sin(rad)
-            self.nodes.append(Node(x, y, self.lx, self.ly))
+            self.nodes.append(Node(i, x, y, self.lx, self.ly))
 
     def setLink(self):
-        linknode = random.choices(range(len(self.nodes)), k=35)
+        nodesize = len(self.nodes)
+        kk = int(nodesize * 3 / 5)
+        linknode = random.choices(range(nodesize), k=kk)
         size = len(linknode)
         for i in range(size):
             type = 0
@@ -48,7 +47,6 @@ class Field:
                 continue
             self.nodes[i].addLink(type, self.nodes[other_index])
             self.nodes[other_index].addLink(type, self.nodes[i])
-
 
     '''
     {

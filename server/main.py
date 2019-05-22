@@ -1,9 +1,11 @@
 from model import Model
 from field import Field
 from communication import Com
+import time
 
-CALC_ITERATION = 1000
-NODE_NUM = 50
+CALC_ITERATION = 100
+FIELD_SIZE = 800
+NODE_NUM = 2
 IP = "127.0.0.1"
 SEND_PORT = 5775
 RECV_PORT = 5665
@@ -20,11 +22,19 @@ def recvandsend():
     d = field.getNodes()
     com.sendjson(d)
 
+
 def modelinitlize(num):
     field.initialize(num)
     model.setNode(field.nodes)
     d = field.getNodes()
     com.sendjson(d)
+
+def setlayout():
+    global field, model, com
+    for i in range(CALC_ITERATION):
+        print("ITER:",i)
+        recvandsend()
+        time.sleep(0.1)
 
 
 def commandhandler(unused_addr, command, num):
@@ -35,15 +45,14 @@ def commandhandler(unused_addr, command, num):
     elif command is 1:
         recvandsend()
     elif command is 2:
-        model.setlayout()
-    elif command is 3:
-        modelinitlize(num)
+        setlayout()
 
 
 def main():
     global model, field, com
-    model = Model(CALC_ITERATION)
+    model = Model()
     field = Field()
+    field.setField(FIELD_SIZE)
     com = Com()
     com.setupclient(IP, SEND_PORT, SENDADDRESS)
     com.setupserver(IP, RECV_PORT, RECVADDRESS, commandhandler)

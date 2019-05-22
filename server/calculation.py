@@ -1,7 +1,7 @@
 from node import Node
 from math import pi, atan2, fabs, pow, sqrt
 
-DC1 = 10.0
+DC1 = 50.0
 DC2 = 100.0
 DC3 = 0.01
 DC4 = 0.01
@@ -9,10 +9,10 @@ DC5 = 0.01
 DC6 = 10.0
 DC7 = 1
 DC8 = 1
-DC9 = 0
+DC9 = 0.01
 DC10 = pi/4.0
 DC11 = pi/2.0
-DC12 = 1.0
+DC12 = 200000.0
 DC13 = 0.1
 
 
@@ -20,7 +20,7 @@ def attractiveforce(n1, n2):
     dx = n1.pos[0] - n2.pos[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
-    if d == 0:
+    if d < 100:
         return 0, 0
     dc = d / DC2
     f = -DC1 * dc
@@ -34,14 +34,47 @@ def repulsiveforce(n1, n2):
     dx = n1.pos[0] - n2.pos[0]
     dy = n1.pos[1] - n2.pos[1]
     d = getDistance(n1, n2)
-    if d == 0:
-        return 0, 0
-    f = DC12 / (d * d)
-    f = thresh(f)
-    rfx = f * (dx / d)
-    rfy = f * (dy / d)
+    if d > 400 or d == 0:
+        rfx, rfy = 0, 0
+    else:
+        f = -DC12 / (d * d)
+        f = thresh(f)
+        rfx = f * (dx / d)
+        rfy = f * (dy / d)
+
     return rfx, rfy
 
+def repulsiveToWall(n):
+    mind_x = n.mindToWall(0)
+    mind_y = n.mindToWall(1)
+    if mind_x is None and mind_y is None:
+        return 0,0
+    else:
+        if mind_x is None:
+            d = mind_y
+            axis = 1
+        elif mind_y is None:
+            d = mind_x
+            axis = 0
+        else:
+            bAxis = (abs(mind_x) > abs(mind_y))
+            if bAxis:
+                d = mind_y
+                axis = 1
+            else:
+                d = mind_x
+                axis = 0
+        bPositive = (d >= 0)
+        f = DC12 / (d * d)
+        if not bPositive:
+            f *= -1
+        f = thresh(f)
+        if axis is 0:
+            rfx, rfy = f, 0
+        elif axis is 1:
+            rfx, rfy = 0, f
+
+        return rfx, rfy
 
 def magneticforce(n1, n2, edgetype):  # TODO: 閾値設定
     mfx = magneticforceonaxis(n1, n2, edgetype, 0)
@@ -244,5 +277,7 @@ def thresh(v):
         value = 500
     elif value < -500:
         value = -500
+    elif value > -0.00000005 and value < 0.00000005:
+        value = 0
 
     return value

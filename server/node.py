@@ -2,12 +2,13 @@ import numpy as np
 
 class Node:  # TODO: ノードが長方形の場合も想定したほうが良いかも
 
-    def __init__(self, x_, y_, mx, my):
+    def __init__(self, i, x_, y_, mx, my):
         self.pos = [x_, y_]
         self.r = 10
         self.mx = mx
         self.my = my
         self.link = []
+        self.index = i
 
     def addLink(self, t, n):
         linktype = t
@@ -67,11 +68,33 @@ class Node:  # TODO: ノードが長方形の場合も想定したほうが良�
         self.checkWall()
 
     def checkWall(self):  # TODO: これでOK？
+        t = 0.0
         if self.pos[0] - self.r < 0:
-            self.pos[0] = self.r
+            self.pos[0] = self.r + t
         elif self.pos[0] + self.r > self.mx:
-            self.pos[0] = self.mx - self.r
+            self.pos[0] = self.mx - self.r - t
         if self.pos[1] - self.r < 0:
-            self.pos[1] = self.r
+            self.pos[1] = self.r + t
         elif self.pos[1] + self.r > self.my:
-            self.pos[1] = self.my - self.r
+            self.pos[1] = self.my - self.r - t
+
+    def mindToWall(self, axis):
+        thresh = 50.0
+        if axis is 0:
+            if self.pos[0] < thresh:
+                mindx = self.pos[0]
+                return mindx
+            elif self.pos[0] > self.mx - thresh:
+                mindx = self.pos[0] - self.mx
+                return mindx
+            else:
+                return None
+        elif axis is 1:
+            if self.pos[1] < thresh:
+                mindy = self.pos[1]
+                return mindy
+            elif self.pos[1] > self.my - thresh:
+                mindy = self.pos[1] - self.my
+                return mindy
+            else:
+                return None
