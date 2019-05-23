@@ -2,10 +2,16 @@
 
 ## Server
 - calculation
+- `python main.py`
+-  python 3.7.1
 
 ## client
-- ui
+- Interface
+
+![GUI](client/screen.png)
+- of-0.10.1
 - send command to Server
-    - command1 : set field (server will randomly set the filed)
-    - command2 : calculate for one step
-    - command3 : calculate for 1000 steps
+    - INITIALIZE : set field (server will randomly set the filed)
+    - CALCULATE : calculate for one step
+    - AUTO CALCULATE : calculate for 1000 steps
+- `make; make Release`
