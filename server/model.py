@@ -49,7 +49,8 @@ class Model:
         print(n1.index)
         if self.isNext(n1, n2):
             afx, afy = attractiveforce(n1, n2)
-            mfx, mfy = magneticforce(n1, n2, n1.getlinktype(n2))
+            # mfx, mfy = magneticforce(n1, n2, n1.getlinktype(n2))
+            mfx, mfy = 0, 0
             mv = [afx+mfx, afy+mfy]
             print('attractive',afx, afy)
             print('magnatic', mfx, mfy)

@@ -26,7 +26,7 @@ void View::draw()
 
 void View::drawNode(NodeElem *n)
 {
-    ofSetColor(12, 35, 71);
+    ofSetColor(218, 222, 229);
     ofFill();
     ofDrawEllipse(n->x, n->y, n->width, n->height);
 }
@@ -76,7 +76,7 @@ void View::guiEvent(ofxUIEventArgs &e)
 void View::drawData()
 {
     ofPushStyle();
-    ofSetColor(255);
+    ofSetColor(10);
     for (int i = 0; i < m->nodes.size(); i++)
     {
         float px = m->nodes.at(i).x;

@@ -9,7 +9,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-    ofBackground(218, 222, 229);
+    ofBackground(5, 21, 45);
 
     com.setupsend(HOST, SEND_PORT, SEND_ADDRESS);
     com.setuprecv(RECV_PORT, RECV_ADDRESS);
@@ -44,13 +44,13 @@ void ofApp::sendCommand(int &command)
 void ofApp::drawData()
 {
     ofPushStyle();
-    ofSetColor(5, 21, 45);
+    ofSetColor(205, 203, 210);
     ofDrawRectangle(800, 0, 400, 1200);
     ofPopStyle();
     view.drawData();
 
     ofPushStyle();
-    ofSetColor(10);
+    ofSetColor(218, 222, 229);
     ofDrawRectangle(0, 800, 800, 400);
     ofPopStyle();
 }
